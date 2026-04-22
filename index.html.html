@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PCMC Climbing Complex — Full Strategy & Survey Record</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --rock: #1a1a18;
+    --chalk: #f5f0e8;
+    --amber: #e8a020;
+    --rust: #c44a1c;
+    --moss: #4a6741;
+    --sky: #3a7fb5;
+    --muted: #8a8880;
+    --card: #222220;
+    --card2: #1e1e1c;
+    --border: rgba(232,160,32,0.2);
+    --border-soft: rgba(255,255,255,0.06);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--rock); color:var(--chalk); font-family:'DM Sans',sans-serif; font-weight:300; line-height:1.7; overflow-x:hidden; }
+
+  /* ── HEADER ── */
+  header { position:relative; padding:70px 60px 50px; border-bottom:1px solid var(--border); overflow:hidden; }
+  header::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(-55deg,transparent,transparent 40px,rgba(232,160,32,0.03) 40px,rgba(232,160,32,0.03) 41px); }
+  .tag { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.15em; color:var(--amber); border:1px solid var(--amber); padding:4px 12px; margin-bottom:20px; text-transform:uppercase; }
+  h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(44px,7vw,86px); line-height:0.92; letter-spacing:0.02em; margin-bottom:10px; }
+  h1 span { color:var(--amber); }
+  .subtitle { font-size:14px; color:var(--muted); max-width:580px; margin-top:14px; }
+  .header-meta { display:flex; gap:36px; margin-top:30px; flex-wrap:wrap; }
+  .meta-item { font-family:'JetBrains Mono',monospace; font-size:11px; }
+  .meta-item span { color:var(--amber); display:block; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:3px; }
+
+  /* ── TAB NAV ── */
+  .tab-nav { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 60px; overflow-x:auto; background:rgba(0,0,0,0.2); }
+  .tab-btn { background:none; border:none; border-bottom:3px solid transparent; padding:16px 22px; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--muted); cursor:pointer; white-space:nowrap; transition:color 0.2s,border-color 0.2s; letter-spacing:0.02em; }
+  .tab-btn:hover { color:var(--chalk); }
+  .tab-btn.active { color:var(--amber); border-bottom-color:var(--amber); font-weight:500; }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* ── SECTIONS ── */
+  section { padding:60px; border-bottom:1px solid var(--border); }
+  .section-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:var(--amber); text-transform:uppercase; margin-bottom:6px; }
+  h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(32px,4.5vw,52px); line-height:1; color:var(--chalk); margin-bottom:28px; }
+  h3 { font-family:'DM Sans',sans-serif; font-weight:700; font-size:16px; color:var(--chalk); margin-bottom:8px; margin-top:28px; }
+  h3:first-child { margin-top:0; }
+  p { margin-bottom:12px; font-size:14.5px; color:#c8c0b0; line-height:1.75; }
+  p:last-child { margin-bottom:0; }
+  strong { color:var(--chalk); font-weight:500; }
+
+  /* ── SURVEY STYLES ── */
+  .survey-section-title {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:28px;
+    color:var(--amber);
+    letter-spacing:0.05em;
+    padding:20px 0 10px;
+    border-bottom:1px solid var(--border);
+    margin:40px 0 24px;
+  }
+  .survey-section-title:first-child { margin-top:0; }
+  .q-block { margin-bottom:28px; padding:20px 24px; background:var(--card); border-left:3px solid var(--border); transition:border-color 0.2s; }
+  .q-block:hover { border-left-color:var(--amber); }
+  .q-text { font-size:13px; font-weight:700; color:var(--chalk); margin-bottom:12px; font-family:'DM Sans',sans-serif; letter-spacing:0.01em; }
+  .answers { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+  .ans-tick { font-size:12px; padding:4px 12px; background:rgba(74,103,65,0.3); border:1px solid rgba(74,103,65,0.6); color:#9aca88; border-radius:2px; font-family:'JetBrains Mono',monospace; }
+  .ans-cross { font-size:12px; padding:4px 12px; background:rgba(196,74,28,0.15); border:1px solid rgba(196,74,28,0.3); color:#c08070; border-radius:2px; font-family:'JetBrains Mono',monospace; text-decoration:line-through; opacity:0.7; }
+  .handwritten { margin-top:10px; padding:10px 14px; background:rgba(232,160,32,0.07); border-left:2px solid var(--amber); font-size:13px; color:#d8c890; font-style:italic; line-height:1.6; }
+  .handwritten::before { content:'✍ '; font-style:normal; font-size:11px; color:var(--amber); }
+  .blank-ans { font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-style:italic; }
+
+  /* ── BROCHURE GRID ── */
+  .brochure-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:24px; }
+  .brochure-card { background:var(--card); border:1px solid var(--border); padding:22px; }
+  .brochure-card h4 { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--amber); margin-bottom:10px; letter-spacing:0.05em; }
+  .brochure-card p { font-size:13px; color:#a8a098; margin-bottom:6px; }
+  .brochure-card ul { padding-left:16px; }
+  .brochure-card li { font-size:13px; color:#a8a098; margin-bottom:5px; line-height:1.5; }
+  .team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:16px; }
+  .team-card { background:var(--card2); border:1px solid var(--border-soft); padding:16px; text-align:center; }
+  .team-card .name { font-weight:700; font-size:13px; color:var(--chalk); }
+  .team-card .role { font-size:11px; color:var(--amber); font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; }
+  .award-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:14px; }
+  .award-card { background:rgba(232,160,32,0.07); border:1px solid var(--border); padding:14px; text-align:center; }
+  .award-card .aname { font-weight:700; font-size:13px; color:var(--chalk); }
+  .award-card .ayear { font-size:11px; color:var(--amber); font-family:'JetBrains Mono',monospace; margin-top:4px; }
+
+  /* ── STRATEGY STYLES ── */
+  .philosophy { padding:50px 60px; background:rgba(232,160,32,0.05); border-bottom:1px solid var(--border); }
+  .philosophy p { max-width:760px; font-size:15px; line-height:1.85; color:#d0c8b8; }
+  .month-header { display:grid; grid-template-columns:auto 1fr; gap:24px; align-items:start; margin-bottom:36px; }
+  .month-number { font-family:'Bebas Neue',sans-serif; font-size:110px; line-height:0.85; color:transparent; -webkit-text-stroke:1px var(--border); }
+  .month-badge { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 14px; border-radius:2px; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.1em; }
+  .badge-organic { background:rgba(74,103,65,0.4); color:#8ab880; border:1px solid #4a6741; }
+  .badge-build   { background:rgba(58,127,181,0.25); color:#7ab8e8; border:1px solid #3a7fb5; }
+  .badge-scale   { background:rgba(196,74,28,0.25); color:#f0886a; border:1px solid #c44a1c; }
+  .week-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin-top:24px; }
+  .week-card { background:var(--card); border-left:3px solid var(--amber); padding:18px; }
+  .week-label { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--amber); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:6px; }
+  .week-card h3 { font-size:14px; margin-bottom:6px; margin-top:0; }
+  .week-card p { font-size:12.5px; color:#a8a098; margin-bottom:0; }
+  .platform-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:18px; margin-top:28px; }
+  .platform-card { background:var(--card); border:1px solid var(--border); padding:22px; transition:border-color 0.3s,transform 0.3s; }
+  .platform-card:hover { border-color:var(--amber); transform:translateY(-2px); }
+  .platform-icon { font-size:20px; margin-bottom:10px; display:block; }
+  .platform-name { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--amber); text-transform:uppercase; margin-bottom:8px; }
+  .platform-card p { font-size:13px; color:#a0988a; margin-bottom:0; }
+  .platform-card ul { padding-left:16px; margin-top:8px; }
+  .platform-card li { font-size:13px; color:#a0988a; margin-bottom:5px; line-height:1.5; }
+  .numbers-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-top:24px; }
+  .number-card { background:var(--card); border:1px solid var(--border); padding:20px; text-align:center; }
+  .number-value { font-family:'Bebas Neue',sans-serif; font-size:44px; color:var(--amber); line-height:1; display:block; }
+  .number-label { font-size:11px; color:var(--muted); margin-top:5px; font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:0.1em; }
+  .number-note { font-size:11.5px; color:#6a6860; margin-top:6px; }
+  .disclaimer { background:rgba(196,74,28,0.1); border:1px solid rgba(196,74,28,0.3); padding:18px 22px; margin-top:24px; font-size:12.5px; color:#c8a898; font-family:'JetBrains Mono',monospace; line-height:1.7; }
+  .boost-decision { background:rgba(232,160,32,0.06); border:1px solid var(--border); padding:28px; margin-top:28px; }
+  .boost-decision h3 { color:var(--amber); font-size:18px; margin-bottom:14px; margin-top:0; }
+  .condition-item { display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13.5px; align-items:flex-start; }
+  .condition-item:last-child { border-bottom:none; }
+  .cond-icon { font-size:17px; min-width:26px; }
+  .cond-text { color:#c0b8a8; line-height:1.6; }
+  .rules-box { background:var(--card); border-left:4px solid var(--rust); padding:24px 28px; margin-top:24px; }
+  .rules-box h3 { color:#f0886a; margin-bottom:14px; margin-top:0; }
+  .rules-box li { font-size:13.5px; color:#b0a898; margin-bottom:9px; margin-left:18px; line-height:1.65; }
+
+  /* ── INSIGHT BOXES ── */
+  .insight { background:rgba(58,127,181,0.1); border:1px solid rgba(58,127,181,0.3); padding:16px 20px; margin-top:16px; font-size:13.5px; color:#b0ccdd; border-radius:1px; }
+  .insight::before { content:'💡 INSIGHT FROM SURVEY: '; font-family:'JetBrains Mono',monospace; font-size:10px; color:#7ab8e8; letter-spacing:0.1em; display:block; margin-bottom:6px; }
+  .content-table { margin-top:24px; overflow-x:auto; }
+  .content-row { display:grid; grid-template-columns:110px 1fr 1fr 1fr; gap:0; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .content-row.header { background:rgba(232,160,32,0.1); border-bottom:1px solid var(--border); }
+  .content-row div { padding:12px 14px; font-size:12.5px; border-right:1px solid rgba(255,255,255,0.04); line-height:1.5; color:#b8b0a0; }
+  .content-row div:last-child { border-right:none; }
+  .content-row.header div { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; color:var(--amber); text-transform:uppercase; }
+
+  /* ── CONTACT BOX ── */
+  .contact-box { background:var(--card); border:1px solid var(--border); padding:24px; margin-top:24px; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .contact-item { font-size:13px; color:#a8a098; font-family:'JetBrains Mono',monospace; padding:6px 0; border-bottom:1px solid var(--border-soft); }
+  .contact-item span { color:var(--amber); font-size:10px; display:block; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:3px; }
+
+  footer { padding:40px 60px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+
+  @media(max-width:700px){
+    header,section,.philosophy,footer{padding:36px 20px;}
+    .tab-nav{padding:0 20px;}
+    .content-row{grid-template-columns:1fr;}
+    .month-header{grid-template-columns:1fr;}
+    .month-number{font-size:64px;}
+    .contact-box{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="tag">Rohan Networks · PCMC Climbing Complex · Full Brand & Strategy Record</div>
+  <h1>PCMC CLIMBING<br/><span>COMPLEX</span><br/>MASTER FILE</h1>
+  <p class="subtitle">Complete client survey record, brochure data, and 3-month digital strategy — updated with all verified insights from the original assessment form.</p>
+  <div class="header-meta">
+    <div class="meta-item"><span>Client</span>MSCA / PCMC Sport Climbing Complex</div>
+    <div class="meta-item"><span>Signed by</span>Namrata · 10/04/2026</div>
+    <div class="meta-item"><span>Prepared by</span>Rohan Networks</div>
+    <div class="meta-item"><span>Document</span>v2 — Complete Edition</div>
+  </div>
+</header>
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('survey')">📋 Client Survey</button>
+  <button class="tab-btn" onclick="showTab('brochure')">📄 Brochure Data</button>
+  <button class="tab-btn" onclick="showTab('m1')">Month 1 — Foundation</button>
+  <button class="tab-btn" onclick="showTab('m2')">Month 2 — Consistency</button>
+  <button class="tab-btn" onclick="showTab('m3')">Month 3 — Scale</button>
+  <button class="tab-btn" onclick="showTab('platforms')">Platform Guides</button>
+  <button class="tab-btn" onclick="showTab('content')">Content Strategy</button>
+  <button class="tab-btn" onclick="showTab('rules')">Ground Rules</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 1: FULL SURVEY TRANSCRIPTION
+═══════════════════════════════════════ -->
+<div id="tab-survey" class="tab-content active">
+<section>
+  <div class="section-label">Original Source Document</div>
+  <h2>CLIENT SURVEY —<br/>COMPLETE RECORD</h2>
+  <p>Full transcription of the Artificial Climbing Wall Marketing Survey & Campaign Inspection Form, prepared by Rohan Networks. All ticked answers, crossed answers, and handwritten notes are recorded exactly as they appear on the original form. Signed by <strong>Namrata</strong>, dated <strong>10 April 2026</strong>.</p>
+
+  <!-- PROJECT IDENTIFICATION -->
+  <div class="survey-section-title">Project Identification & Purpose</div>
+
+  <div class="q-block">
+    <div class="q-text">What is the exact project name we should use publicly for this wall?</div>
+    <div class="answers"><span class="ans-tick">Official municipal project name only</span></div>
+    <div class="handwritten">Pimpri Chi Wall, Pimple Saudagar chi Wall. Also written in green ink: PCMC Climbing Complex.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the exact address or location we should mention everywhere?</div>
+    <div class="answers"><span class="ans-tick">Exact address confirmed</span><span class="ans-tick">Area name only</span><span class="ans-tick">Location still being verified</span></div>
+    <div class="handwritten">Vibgyor School. Google. (landmark and map visibility prioritised)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Which wall are we documenting in this survey?</div>
+    <div class="answers"><span class="ans-tick">Original PMC wall at Shivajinagar Gavthan</span><span class="ans-tick">New PCMC wall at Yoga Park, Pimple Saudagar</span><span class="ans-tick">Both walls together as benchmark and reference</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the main purpose of this survey?</div>
+    <div class="answers"><span class="ans-tick">To design a marketing campaign</span></div>
+  </div>
+
+  <!-- OPERATIONAL STATUS -->
+  <div class="survey-section-title">Operational Status & Management</div>
+
+  <div class="q-block">
+    <div class="q-text">What is the final operational status right now?</div>
+    <div class="answers"><span class="ans-tick">Open and active</span></div>
+    <div class="handwritten">Gym Section Upcoming — 8 months. (A gym section is being added within approximately 8 months)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the official ownership structure?</div>
+    <div class="answers"><span class="ans-tick">Municipal ownership with private operations</span></div>
+    <div class="handwritten">MSCA (Maharashtra Sport Climbing Association is the private operator)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Who is responsible for day-to-day running?</div>
+    <div class="answers"><span class="ans-tick">Same operator as earlier wall</span></div>
+    <div class="handwritten">MSCA Admin</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the exact management model?</div>
+    <div class="answers"><span class="ans-tick">Long-term O&M contract</span><span class="ans-tick">Tender-based operation</span></div>
+    <div class="handwritten">Lease 15 years</div>
+  </div>
+
+  <!-- TECHNICAL SPECIFICATIONS -->
+  <div class="survey-section-title">Technical Specifications & Safety</div>
+
+  <div class="q-block">
+    <div class="q-text">What is the exact wall specification that should be treated as final?</div>
+    <div class="answers"><span class="ans-tick">Final site specification already confirmed</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the final confirmed wall height?</div>
+    <div class="answers"><span class="ans-tick">Multiple heights reported in media</span></div>
+    <div class="handwritten">15m Lead/Speed. 5m Bouldering.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Which technical format exists on site?</div>
+    <div class="answers"><span class="ans-tick">Speed climbing wall</span><span class="ans-tick">Lead climbing wall</span><span class="ans-tick">Bouldering wall</span><span class="ans-cross">Single wall only</span></div>
+    <div class="handwritten">Tension Board — 2. Auto-Belay — 7.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What wall formats are actually present on site?</div>
+    <div class="answers"><span class="ans-tick">Speed wall — confirmed 15m</span><span class="ans-tick">Lead wall — confirmed 15m</span><span class="ans-tick">Bouldering — confirmed 5m</span><span class="ans-tick">Multi-format but incomplete</span><span class="ans-cross">Only single wall present</span></div>
+    <div class="handwritten">World Climbing. "Sports" keyword not to be used. (Term "World Climbing" is preferred over "Olympic-standard" for marketing use)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Is the wall truly Olympic/IFSC standard?</div>
+    <div class="answers"><span class="ans-tick">Confirmed by accreditation</span><span class="ans-tick">Used for official competitions</span></div>
+    <div class="handwritten">Asian Kids Competition, National, World Champ, Zonal. (Has hosted these levels — proof exists)</div>
+  </div>
+
+  <!-- SAFETY -->
+  <div class="survey-section-title">Safety Systems</div>
+
+  <div class="q-block">
+    <div class="q-text">What is the main safety system available on site?</div>
+    <div class="answers"><span class="ans-tick">Full harness and belay system</span><span class="ans-tick">Certified route setup</span><span class="ans-tick">Protective flooring (Bouldering)</span></div>
+    <div class="handwritten">Opened in Jan.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Who checks equipment and safety before sessions?</div>
+    <div class="answers"><span class="ans-tick">Certified trainer</span><span class="ans-tick">Operator staff</span></div>
+    <div class="handwritten">Every Climb. 6-month equipment check — Jan.</div>
+  </div>
+
+  <!-- TEAM & CREDIBILITY -->
+  <div class="survey-section-title">Team Credibility & Facility Reality</div>
+
+  <div class="q-block">
+    <div class="q-text">Which statements must NOT be used without proof?</div>
+    <div class="answers"><span class="ans-tick">"India's largest wall"</span><span class="ans-tick">"Olympic-level certified"</span><span class="ans-tick">"International standard"</span><span class="ans-tick">"Best in India"</span><span class="ans-tick">"Fully operational"</span></div>
+    <div class="handwritten">Dormitory Stay to not be kept Public.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">How experienced is the current operator/team?</div>
+    <div class="handwritten">Srikrushna Kaduskar — 30 years. Sagar Palkar — Everester, 10+ years. Colonel Devang Naik — Advisor, 10+ years.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Have they managed similar facilities before?</div>
+    <div class="answers"><span class="ans-tick">Yes</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What happens if the current operator exits or fails?</div>
+    <div class="blank-ans">Left blank — no succession plan documented.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What visible differences exist between public claims and site reality?</div>
+    <div class="handwritten">None.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is currently non-functional or underutilized on site?</div>
+    <div class="handwritten">Nothing.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the first impression when someone visits the facility?</div>
+    <div class="handwritten">Lai bhari ✓ (Excellent / Outstanding)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What are the biggest complaints or friction points users face?</div>
+    <div class="blank-ans">Left blank. Question crossed with arrow.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What makes users come back?</div>
+    <div class="handwritten">Addictive.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">How do inquiries currently convert into actual users?</div>
+    <div class="handwritten">Interact with instructors. Trial Taken → Joining. Conversion Ratio — 80%.</div>
+  </div>
+
+  <!-- EVENTS -->
+  <div class="survey-section-title">Events & Competition</div>
+
+  <div class="q-block">
+    <div class="q-text">Has the facility actually hosted major events?</div>
+    <div class="answers"><span class="ans-tick">IFSC Asian Kids Championship</span></div>
+    <div class="handwritten">Zonal Competition.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Is the facility competition-ready today?</div>
+    <div class="answers"><span class="ans-tick">Fully ready</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Which statements are 100% verified and safe to use in marketing?</div>
+    <div class="answers"><span class="ans-tick">Location and ownership</span><span class="ans-tick">Operational status</span><span class="ans-tick">Technical specifications</span><span class="ans-tick">Competition hosting</span><span class="ans-tick">Training programs</span></div>
+  </div>
+
+  <!-- OPERATIONS & USER MANAGEMENT -->
+  <div class="survey-section-title">Operations & User Management</div>
+
+  <div class="q-block">
+    <div class="q-text">Is there a written SOP for daily operations?</div>
+    <div class="answers"><span class="ans-tick">Partially documented</span><span class="ans-tick">Informal only</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">How are admissions or public entries handled?</div>
+    <div class="answers"><span class="ans-tick">Fixed registration process</span><span class="ans-tick">Walk-in only</span><span class="ans-tick">Batch-based entry</span><span class="ans-tick">Event-based entry</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">How are training sessions structured?</div>
+    <div class="answers"><span class="ans-tick">Beginner batch</span><span class="ans-tick">Intermediate batch</span><span class="ans-tick">Advanced batch</span><span class="ans-tick">School batch</span><span class="ans-tick">Competition batch</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the user journey from enquiry to actual climbing use?</div>
+    <div class="handwritten">Walk-in → Info → Discipline → Trial (Paid) → Form → Batch + (Index) App, Set.</div>
+  </div>
+
+  <!-- AUDIENCE -->
+  <div class="survey-section-title">Audience & Access Model</div>
+
+  <div class="q-block">
+    <div class="q-text">What categories of users come most often?</div>
+    <div class="answers"><span class="ans-tick">School students</span><span class="ans-tick">College students</span><span class="ans-tick">Athletes</span><span class="ans-tick">Hobby users</span><span class="ans-tick">Professional climbers</span><span class="ans-tick">Mixed audience</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What age groups are expected to use this facility?</div>
+    <div class="answers"><span class="ans-tick">Children/Teenagers</span><span class="ans-tick">Adults</span><span class="ans-tick">Mixed age groups</span><span class="ans-cross">Age restrictions apply</span></div>
+    <div class="handwritten">Do not apply. (No age restrictions — open to all)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Is there a free or subsidized access model?</div>
+    <div class="answers"><span class="ans-tick">Free for selected users</span><span class="ans-tick">Subsidized for some groups</span><span class="ans-tick">Paid for all users</span><span class="ans-tick">Event-based pricing</span></div>
+    <div class="handwritten">PCMC Students. (Free access for PCMC school students)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">If there is free access, who qualifies?</div>
+    <div class="answers"><span class="ans-tick">Municipal school students</span><span class="ans-tick">Underprivileged children — Situational</span><span class="ans-tick">Competition trainees</span><span class="ans-cross">Local residents</span><span class="ans-cross">No free access</span></div>
+  </div>
+
+  <!-- MARKETING STRATEGY -->
+  <div class="survey-section-title">Marketing Strategy & Content</div>
+
+  <div class="q-block">
+    <div class="q-text">What kind of marketing do you strongly dislike or want to avoid?</div>
+    <div class="blank-ans">Left blank with small squiggle — no specific answer given.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What kind of marketing do you believe works best for your audience?</div>
+    <div class="handwritten">Word of Mouth.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What kind of content can we safely show in public promotions?</div>
+    <div class="answers"><span class="ans-tick">Facility visuals</span><span class="ans-tick">Trainer clips</span><span class="ans-tick">Student testimonials</span><span class="ans-tick">Event footage</span><span class="ans-tick">Safety training visuals</span><span class="ans-tick">All of the above with approval</span></div>
+    <div class="handwritten">(Education) Standpoint. Much More.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What marketing platforms are already active for the wall?</div>
+    <div class="answers"><span class="ans-tick">Instagram</span><span class="ans-tick">Facebook</span><span class="ans-tick">Google Business Profile</span><span class="ans-tick">Website</span><span class="ans-tick">YouTube</span><span class="ans-tick">News coverage</span><span class="ans-cross">Not yet organised</span></div>
+  </div>
+
+  <!-- VISION & MINDSET -->
+  <div class="survey-section-title">Vision, Mindset & Priorities</div>
+
+  <div class="q-block">
+    <div class="q-text">What kind of audience do you truly want to attract?</div>
+    <div class="handwritten">Schooling, Sports.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What type of audience do you NOT want associated with this facility?</div>
+    <div class="handwritten">Nothing. (Open to all — no exclusions)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is your biggest fear related to this project right now?</div>
+    <div class="handwritten">Running the Show. (Operational execution is the biggest concern)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is your biggest confidence or strength in this project?</div>
+    <div class="handwritten">Infra. (Infrastructure)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">If you had to describe this project in one sentence to someone new?</div>
+    <div class="handwritten">International Standard, Adventure for & Fitness, full body.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What do you want people to feel when they visit or see this facility?</div>
+    <div class="handwritten">Friendly & Educational.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What would make this project feel like a complete success for you personally?</div>
+    <div class="handwritten">(Director) Mission Olympic 2036.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the biggest opportunity in this project?</div>
+    <div class="handwritten">Youth participation. Lifestyle.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the biggest weakness in this project?</div>
+    <div class="handwritten">Footfall.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the biggest strength in this project?</div>
+    <div class="handwritten">Infrastructure.</div>
+  </div>
+
+  <!-- FINANCIAL MODEL -->
+  <div class="survey-section-title">Financial Model & Revenue</div>
+
+  <div class="q-block">
+    <div class="q-text">What is the fee structure for training or use?</div>
+    <div class="answers"><span class="ans-tick">Daily pass</span><span class="ans-tick">Monthly fee</span><span class="ans-cross">Batch fee</span><span class="ans-tick">Event fee</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the revenue model?</div>
+    <div class="answers"><span class="ans-tick">Training fees</span><span class="ans-tick">Memberships</span><span class="ans-tick">Event income</span><span class="ans-tick">Sponsorships</span><span class="ans-tick">Mixed revenue</span></div>
+    <div class="handwritten">Personal Training (Monthly/Yearly).</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Is there a clear revenue model in action?</div>
+    <div class="answers"><span class="ans-tick">Paid training programs</span><span class="ans-tick">Membership system</span><span class="ans-tick">Event-based revenue</span><span class="ans-tick">Sponsorship involvement</span><span class="ans-tick">Still developing</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Who pays for maintenance costs?</div>
+    <div class="answers"><span class="ans-tick">Municipal body</span></div>
+    <div class="handwritten">MSCA.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Who handles utilities and running costs?</div>
+    <div class="blank-ans">No box ticked.</div>
+    <div class="handwritten">MSCA.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the confirmed project cost?</div>
+    <div class="blank-ans">No box ticked — all options left blank.</div>
+  </div>
+
+  <!-- LEGAL, INSURANCE & BRAND -->
+  <div class="survey-section-title">Legal, Insurance & Brand Positioning</div>
+
+  <div class="q-block">
+    <div class="q-text">What are the operator's responsibilities?</div>
+    <div class="answers"><span class="ans-tick">All of the above (Training, Competition Management, Promotion, Maintenance, Reporting)</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What are the municipal body's responsibilities?</div>
+    <div class="answers"><span class="ans-tick">Ownership</span><span class="ans-tick">Legal control</span><span class="ans-cross">Oversight</span><span class="ans-cross">Public accountability</span></div>
+    <div class="handwritten">MSCA. (Public accountability attributed to MSCA, not the municipal body directly)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Is insurance in place for users and events?</div>
+    <div class="answers"><span class="ans-cross">Yes</span><span class="ans-tick">No</span></div>
+    <div class="handwritten">We take a waiver for safety, tried by due diligence.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What are the public liability protections?</div>
+    <div class="answers"><span class="ans-tick">Clear waiver system</span><span class="ans-tick">Trainer certification</span><span class="ans-tick">Emergency protocol</span><span class="ans-cross">Event insurance</span></div>
+    <div class="handwritten">For Students we sometimes provide certification when IMF enters to release a course.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Are there written permissions for filming and promotion?</div>
+    <div class="answers"><span class="ans-cross">Yes</span><span class="ans-tick">No</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Can the facility be used in advertisements and reels?</div>
+    <div class="answers"><span class="ans-tick">Yes freely</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the main brand position to use in marketing?</div>
+    <div class="answers"><span class="ans-tick">Training center</span><span class="ans-tick">Youth development hub</span><span class="ans-tick">Olympic-grade sports asset</span><span class="ans-tick">Championship venue</span></div>
+  </div>
+
+  <!-- RISK ANALYSIS -->
+  <div class="survey-section-title">Risk Analysis & Final Validation</div>
+
+  <div class="q-block">
+    <div class="q-text">What operational risk is most important?</div>
+    <div class="answers"><span class="ans-tick">Poor maintenance</span></div>
+    <div class="handwritten">Frequent updates. (Regular upkeep and content updates are both physical and digital risks)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What financial risks are most important?</div>
+    <div class="answers"><span class="ans-tick">Low footfall</span><span class="ans-tick">High operating cost</span><span class="ans-tick">Weak event income</span><span class="ans-tick">Sponsorship gap</span><span class="ans-tick">Poor fee recovery</span><span class="ans-tick">Budget overrun</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What legal risk is most important?</div>
+    <div class="blank-ans">Large X across the entire question — deliberately skipped.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What is the strongest public message?</div>
+    <div class="answers"><span class="ans-tick">Safety</span><span class="ans-tick">Sport excellence</span><span class="ans-tick">Accessibility</span><span class="ans-tick">Youth opportunity</span><span class="ans-tick">Modern infrastructure</span><span class="ans-tick">Event capability</span></div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What should never be claimed publicly without proof?</div>
+    <div class="answers"><span class="ans-tick">"Best in India"</span><span class="ans-tick">"Largest"</span><span class="ans-tick">"International-grade"</span><span class="ans-tick">"Guaranteed results"</span><span class="ans-cross">"Olympic-standard"</span></div>
+    <div class="handwritten">World Climbing Star. (Preferred replacement for Olympic-standard language.) More Information: Top Notch, Leading Training Center.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What public facts have already been verified and can be referenced?</div>
+    <div class="answers"><span class="ans-tick">PMC's original Shivajinagar wall exists publicly</span><span class="ans-tick">New wall reported as ₹5 crore PCMC project</span><span class="ans-tick">New wall already reported in championship coverage</span></div>
+    <div class="handwritten">Annasahabe Magar, PCMC 2001 — eventually the PMC wall came 2010. Discontinued due to deteriorated conditions, updated norms.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What marketing risk is most important?</div>
+    <div class="answers"><span class="ans-tick">Inconsistent messaging</span><span class="ans-tick">Weak awareness</span><span class="ans-tick">Poor content quality</span><span class="ans-tick">Wrong audience targeting</span><span class="ans-tick">Overclaiming — Achievements & Awards</span></div>
+  </div>
+
+  <!-- DECISION-MAKING -->
+  <div class="survey-section-title">Decision-Making & Risk Assessment</div>
+
+  <div class="q-block">
+    <div class="q-text">How do you usually take important decisions?</div>
+    <div class="handwritten">6 Directors. Neemeta Mom. (Decisions involve 6 directors plus a senior member referred to as Neemeta Mom)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What would make you lose confidence in this campaign?</div>
+    <div class="handwritten">Membership → driving factor. (If memberships don't grow, confidence in the campaign drops)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What would make you fully trust and support this campaign?</div>
+    <div class="handwritten">Digi footprint. (A measurable, growing digital presence is the trust signal)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">How do you define "good results" from marketing?</div>
+    <div class="handwritten">Client Central, Rockalion, Getna, Equilibrium, Boulder Box, High Rock. (These appear to be named competitor facilities — good results = performing better than or reaching the level of these peers)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What are you expecting immediately versus what you are willing to wait for?</div>
+    <div class="handwritten">2 months. (Expecting visible results within 2 months)</div>
+  </div>
+
+  <!-- FINAL QUESTIONS -->
+  <div class="survey-section-title">Final Operational Questions</div>
+
+  <div class="q-block">
+    <div class="q-text">What are the top reasons people drop off after showing interest?</div>
+    <div class="handwritten">Educational timespan for youth during exams. (Seasonal drop-off tied to school exam periods)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">Who can delay or stop decisions even after approval?</div>
+    <div class="handwritten">None.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">How long does it usually take to approve something new?</div>
+    <div class="handwritten">Subjective to task.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">If the campaign is approved today, how quickly can execution start?</div>
+    <div class="handwritten">Upto marketer. (The marketer — Rohan Networks — controls execution speed, not the client)</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What internal limitations can slow down execution?</div>
+    <div class="handwritten">None.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What will keep this project running successfully for the next 3–5 years?</div>
+    <div class="handwritten">Footfall & increase in membership (Primary). Marketing/publicity (Secondary).</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What could realistically cause this project to shut down or fail?</div>
+    <div class="handwritten">None.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What can we confidently show without any risk?</div>
+    <div class="handwritten">Infrastructure.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What must we verify before showing publicly?</div>
+    <div class="handwritten">All text content & achievements & Awards & pricing.</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-text">What should we completely avoid showing?</div>
+    <div class="handwritten">Free pricing or false promise.</div>
+  </div>
+
+  <!-- BLANK PAGE NOTE -->
+  <div class="survey-section-title">Additional Handwritten Notes</div>
+  <div class="q-block">
+    <div class="q-text">Blank page at end of form</div>
+    <div class="handwritten">Mission Para Olympics 2028. Versitality. (Two strategic aspirations written separately — adaptive sports and programme versatility)</div>
+  </div>
+
+  <!-- OFFICIAL CONTACT DETAILS FROM BROCHURE -->
+  <div class="survey-section-title">Official Contact Details (from Brochure)</div>
+  <div class="contact-box">
+    <div class="contact-item"><span>Phone</span>+91 9684808228</div>
+    <div class="contact-item"><span>Instagram</span>msca_climbingwallpcmc</div>
+    <div class="contact-item"><span>Facebook</span>Maharashtra Sport Climbing Association</div>
+    <div class="contact-item"><span>Website</span>www.mymsca.org</div>
+    <div class="contact-item"><span>Email</span>info@mymsca.org</div>
+    <div class="contact-item"><span>Full Address</span>PCMC Sport Climbing Complex, Pimple Saudagar, Pune 411027</div>
+  </div>
+</section>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 2: BROCHURE DATA
+═══════════════════════════════════════ -->
+<div id="tab-brochure" class="tab-content">
+<section>
+  <div class="section-label">Official Marketing Material</div>
+  <h2>BROCHURE DATA —<br/>VERIFIED CONTENT</h2>
+  <p>This is the content directly from MSCA's official printed brochure. Everything here is safe to reference in marketing because the client has already published it. These are the facts, credentials, names, and programme details that are pre-verified and ready to use.</p>
+
+  <h3>Why Climbing — Official Programme Messaging</h3>
+  <p>The brochure leads with four benefit statements: Full-Body Strength & Endurance, Improves Focus & Concentration, Develops Problem-Solving Skills, and Builds Confidence & Mental Resilience. The section "Climbing on the Olympic Stage" notes that the sport is governed by World Climbing (not "Olympic-standard" — consistent with the survey's instruction on keyword usage) and made its Olympic debut at Tokyo 2020. The progression pathway shown is Zonal Competitions → National Championship → International Platforms → Olympic Stage.</p>
+
+  <div class="brochure-grid" style="margin-top:24px;">
+    <div class="brochure-card">
+      <h4>Introductory Session</h4>
+      <p style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;">2 Days · 2 Hours per session</p>
+      <ul>
+        <li>Short beginner programme</li>
+        <li>Learn basic climbing skills</li>
+        <li>Safe & fun environment</li>
+        <li>Perfect first step before full programme</li>
+      </ul>
+    </div>
+    <div class="brochure-card">
+      <h4>Basic Programme</h4>
+      <p style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;">5 Days · 2 Hours per session</p>
+      <p>For first-time climbers, no prior experience needed. Focus: Harness wearing, climbing commands, footwork drills, basic top rope, introductory bouldering, climbing fun games.</p>
+    </div>
+    <div class="brochure-card">
+      <h4>Advanced Programme</h4>
+      <p style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;">10 Days · 2 Hours per session</p>
+      <p>For kids with prior exposure, returning climbers, athletes in training. Focus: Advanced movement, route reading, endurance circuits, progressive top rope, structured bouldering challenges.</p>
+    </div>
+    <div class="brochure-card">
+      <h4>Regular Programmes</h4>
+      <p style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;">Ongoing · Coach-led</p>
+      <ul>
+        <li>Structured, coach-led climbing sessions</li>
+        <li>Build strength & confidence</li>
+        <li>Top rope, bouldering & movement drills</li>
+        <li>Safe environment for all levels</li>
+      </ul>
+    </div>
+    <div class="brochure-card">
+      <h4>Certificate Programmes</h4>
+      <p style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;">Introduction to Climbing · 1 Day</p>
+      <p>Level 1 certificate. Basic Techniques & Safety Awareness. For Std. 4th & above. Also offered: Competitive Training Program (Advanced Coaching, Competition Prep, State & National Exposure).</p>
+    </div>
+    <div class="brochure-card">
+      <h4>School Centric Support</h4>
+      <p style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;">B2B Partnership Offering</p>
+      <ul>
+        <li>Special School Partnership Packages</li>
+        <li>Certified Coaches & Safety Standards</li>
+        <li>Event & Inter-School Competition Support</li>
+        <li>Annual Climbing Camps</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-top:40px;">Batch Timings (Confirmed)</h3>
+  <p>Morning: B1 — 7:00am to 9:00am. B2 — 9:30am to 11:30am. Evening: B3 — 4:00pm to 6:00pm. B4 — 6:30pm to 8:30pm. Weekly Off: Tuesday.</p>
+
+  <h3 style="margin-top:32px;">The Team — Named & Credentialed</h3>
+  <div class="team-grid">
+    <div class="team-card"><div class="name">Dhanashri L.</div><div class="role">National Athlete</div></div>
+    <div class="team-card"><div class="name">Diksha Malviya</div><div class="role">National Climber & Certified Judge</div></div>
+    <div class="team-card"><div class="name">Vicky Bhalerao</div><div class="role">National Climber & Certified Route Setter</div></div>
+    <div class="team-card"><div class="name">Mantu Mantri</div><div class="role">Elite Climber & Certified Belayer</div></div>
+    <div class="team-card"><div class="name">Amol Jogdand</div><div class="role">Elite Climber & Coach</div></div>
+    <div class="team-card"><div class="name">Irfan Shaikh</div><div class="role">Elite Climber & Certified Route Setter</div></div>
+  </div>
+
+  <h3 style="margin-top:32px;">Shiv Chhatrapati Rajya Krida Puraskar Awardees</h3>
+  <p>Maharashtra's most prestigious state sports honour. Four winners from MSCA's ranks — this is a verified, named, datable credential that can be used in marketing as-is.</p>
+  <div class="award-grid">
+    <div class="award-card"><div class="aname">Hritik Marne</div><div class="ayear">2021–22</div></div>
+    <div class="award-card"><div class="aname">Shreya Nankar</div><div class="ayear">2022–23</div></div>
+    <div class="award-card"><div class="aname">Sahil Khan</div><div class="ayear">2022–23</div></div>
+    <div class="award-card"><div class="aname">Saniya Shaikh</div><div class="ayear">2023–24</div></div>
+  </div>
+</section>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 3: MONTH 1
+═══════════════════════════════════════ -->
+<div id="tab-m1" class="tab-content">
+<section>
+  <div class="month-header">
+    <div class="month-number">01</div>
+    <div class="month-intro">
+      <div class="section-label">Phase One</div>
+      <h2>BUILD THE HOUSE<br/>BEFORE INVITING GUESTS</h2>
+      <span class="month-badge badge-organic">100% Organic · Zero Spend</span>
+      <p>Month 1 has one job: make every platform look alive, credible, and consistent. The survey confirmed execution can begin as soon as the marketer is ready. That means no excuses for delay — but also no shortcuts on the foundation work.</p>
+    </div>
+  </div>
+
+  <div class="insight">The survey revealed the client expects visible results within 2 months. This creates pressure, but the correct response is not to rush — it is to show measurable progress on verifiable metrics (Google reviews, posting consistency, profile completeness) that the client can see growing in real time. "Digi footprint" was explicitly named as the trust signal that would make the client fully support the campaign.</div>
+
+  <h3>The Core Objective</h3>
+  <p>The survey confirmed that the official name is <strong>PCMC Sport Climbing Complex</strong> (or informally "Pimpri Chi Wall" / "Pimple Saudagar chi Wall") and the verified address is Yoga Park, Pimple Saudagar, Near Vibgyor School, Pune 411027. Every platform — Instagram handle <strong>msca_climbingwallpcmc</strong>, Facebook as Maharashtra Sport Climbing Association, website www.mymsca.org, and Google Business — must show identical information from day one of Month 1.</p>
+
+  <div class="week-grid">
+    <div class="week-card">
+      <div class="week-label">Week 1</div>
+      <h3>Audit & Align All Platforms</h3>
+      <p>Standardise name, address (+91 9684808228), bio, and category across Instagram, Facebook, Google Business, and YouTube. Verify www.mymsca.org is live and functional. If the site is still under construction, Google Business becomes the primary landing destination for all campaign links.</p>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Week 2</div>
+      <h3>Filming Weekend — Content Bank</h3>
+      <p>One focused shoot day. Capture the 15m Lead/Speed wall, 5m bouldering section, 7 auto-belays in use, 2 tension boards, certified trainers by name, batch sessions in progress. This content bank funds 8 weeks of posts. Prioritise educational standpoint content — the survey explicitly mentioned this framing works for their audience.</p>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Week 3</div>
+      <h3>Launch Posting Rhythm</h3>
+      <p>Begin the weekly schedule. Frame content around the four confirmed user-question themes: What is climbing? Who can join (no age restrictions — confirmed in survey)? How safe is it? How do I start? The 80% trial-to-membership conversion rate is a real stat that can be referenced in parent-facing content.</p>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Week 4</div>
+      <h3>First Google Review Push</h3>
+      <p>Ask 10–15 existing users personally. Priority targets: parents of school students, competition trainees, current batch members. The QR code for the Google listing should be printed and placed at the reception desk this week. Also begin crafting a WhatsApp review request message for Week 5 use.</p>
+    </div>
+  </div>
+
+  <h3>What the Survey Tells Us About Month 1 Content</h3>
+  <p>The client said word of mouth is their best marketing channel, and that the sport itself is addictive. This means Month 1 content should not try to sell — it should <strong>show what the experience feels like</strong>. A parent watching a 30-second Reel of a child successfully completing their first climb, with a certified trainer spotting them on a clean, well-lit wall, is more powerful than any text-based announcement. The "friendly and educational" feeling the client wants visitors to have is the exact emotion that should come through in every piece of content.</p>
+
+  <div class="insight">The client named six competitor facilities: Client Central, Rockalion, Getna, Equilibrium, Boulder Box, and High Rock. These are the benchmarks they are measuring themselves against. Understanding how these facilities present themselves digitally should be part of the Month 1 audit — not to copy them, but to understand what the target audience already recognises as credible in this space.</div>
+
+  <div class="disclaimer">⚠ HONEST EXPECTATION · MONTH 1: Organic reach on a new or revived account grows slowly. Expect 30–80 new followers, 500–2,000 impressions per post, and 5–15 new Google reviews. These are not failures — they are the algorithm learning the account exists and the foundation being built correctly. The client's expectation of results in 2 months is noted, but results in Month 1 are measured by consistency and setup quality, not follower count.</div>
+</section>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 4: MONTH 2
+═══════════════════════════════════════ -->
+<div id="tab-m2" class="tab-content">
+<section>
+  <div class="month-header">
+    <div class="month-number">02</div>
+    <div class="month-intro">
+      <div class="section-label">Phase Two</div>
+      <h2>EARN THE<br/>ALGORITHM'S ATTENTION</h2>
+      <span class="month-badge badge-build">Organic + Relationship Building</span>
+      <p>Month 2 is where the brand stops being a page and starts becoming a system. The content shifts from "what this place is" to "why it matters and who should come here."</p>
+    </div>
+  </div>
+
+  <div class="insight">The survey confirmed the team's credibility in precise detail: Srikrushna Kaduskar with 30 years of experience, Sagar Palkar as an Everester with 10+ years, Colonel Devang Naik as Advisor with 10+ years. The brochure adds six named team members with specific certifications. This is Month 2's content goldmine — real people, real credentials, real stories that no competitor can replicate.</div>
+
+  <h3>The Shift: From Presence to Personality</h3>
+  <p>Month 2 content should begin using the names, credentials, and stories that the brochure has already verified. A short Reel featuring Diksha Malviya — National Climber and Certified Judge — explaining how she got into the sport is more trustworthy than any graphic claiming "expert trainers." Vicky Bhalerao as a Certified Route Setter, Amol Jogdand as Coach — these are real human assets that cost nothing to feature and convert parents far better than facility photography alone.</p>
+
+  <p>The Shiv Chhatrapati Rajya Krida Puraskar awardees are a particularly powerful content thread. Four consecutive years (2021–22, 2022–23, 2022–23, 2023–24) of award winners from the same facility is a verified, datable, nameable achievement. This is the kind of content that parents in Pimpri-Chinchwad share with other parents. It belongs in its own Reel or carousel series in Month 2.</p>
+
+  <div class="week-grid">
+    <div class="week-card">
+      <div class="week-label">Week 5–6</div>
+      <h3>Team Spotlight Series</h3>
+      <p>One trainer featured per week. Short Reel or Story interview — 3 questions maximum. Lead with their credential (National Climber, Certified Judge, etc.), not with their tenure. The brochure credentials are already verified and safe to use.</p>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Week 6–7</div>
+      <h3>Award Story Content</h3>
+      <p>Create a dedicated carousel or Reel series: "4 state-award winners. One facility." Feature Hritik Marne (2021-22), Shreya Nankar (2022-23), Sahil Khan (2022-23), Saniya Shaikh (2023-24). This is the highest-credibility content available and it's 100% verified.</p>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Week 7</div>
+      <h3>Google Review Push #2</h3>
+      <p>Second wave — target parents specifically. A parent-written review describing their child's experience carries more conversion weight for the school-age segment than any adult review. Ask after a positive batch session. QR code and WhatsApp template both deployed now.</p>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Week 8</div>
+      <h3>YouTube Depth + Data Review</h3>
+      <p>Publish facility tour video with title: "Climbing Training in Pimpri-Chinchwad | PCMC Sport Climbing Complex." Pull Instagram Insights and Google Business analytics. Identify top 2–3 posts by saves and shares — not likes. These determine Month 3 content focus and boost candidates.</p>
+    </div>
+  </div>
+
+  <h3>Seasonal Awareness — Exam Drop-off</h3>
+  <p>The survey confirmed that educational pressure during exam season causes user drop-off. Month 2 content planning must account for when the major exam windows fall for school and college students in Pune. During exam periods, shift content focus toward adult hobby climbers and athletes rather than school-age users. This prevents a visible dip in engagement from looking like a content failure when it is actually a predictable seasonal pattern.</p>
+
+  <div class="insight">The survey notes a gym section is upcoming within approximately 8 months. This is a significant future content milestone — not to be promoted yet, but to be planned for. When the gym section opens, it creates a natural "new chapter" content moment that can drive a second wave of organic growth with zero additional strategy work.</div>
+
+  <div class="disclaimer">⚠ HONEST EXPECTATION · MONTH 2: With consistent Month 1 groundwork, expect 100–250 additional followers, stronger Reel performance than Month 1, 15–25 new Google reviews cumulative, and growing Google Business profile actions. The client's 2-month expectation of results should be addressed with a reporting document at the end of Month 2 showing the digital footprint growth — which was specifically named as their trust signal.</div>
+</section>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 5: MONTH 3
+═══════════════════════════════════════ -->
+<div id="tab-m3" class="tab-content">
+<section>
+  <div class="month-header">
+    <div class="month-number">03</div>
+    <div class="month-intro">
+      <div class="section-label">Phase Three</div>
+      <h2>AMPLIFY WHAT<br/>ALREADY WORKS</h2>
+      <span class="month-badge badge-scale">Organic + Conditional Paid Boost</span>
+      <p>Month 3 is when data earns the right to spend money. The survey confirmed membership growth is the primary metric the client will judge this campaign by. Everything in Month 3 points toward that one outcome.</p>
+    </div>
+  </div>
+
+  <div class="insight">The client defined "good results" by naming six competitor facilities — Client Central, Rockalion, Getna, Equilibrium, Boulder Box, High Rock. The implicit benchmark is: when PCMC's digital presence looks as credible and active as these facilities, the campaign has succeeded. A Month 3 competitive audit of these six pages is worth doing before deciding on boost content.</div>
+
+  <h3>The Boost Decision Framework</h3>
+  <p>The survey confirmed that membership growth is the primary confidence driver for the client. This means the boost decision in Month 3 must be tied to whether the content being boosted can plausibly convert a viewer into a trial session — and whether the trial-to-membership funnel (which is already running at 80%) can handle the additional volume. Boosting impressions without ensuring the enquiry response process is working is burning money.</p>
+
+  <div class="boost-decision">
+    <h3>🔒 Boost Readiness Checklist</h3>
+    <div class="condition-item">
+      <span class="cond-icon">📊</span>
+      <div class="cond-text"><strong>Organic Signal Exists:</strong> At least 2–3 Reels have achieved 1,500+ organic impressions with meaningful saves or shares. If no post has cleared this threshold, the content has a problem that boosting won't solve.</div>
+    </div>
+    <div class="condition-item">
+      <span class="cond-icon">⭐</span>
+      <div class="cond-text"><strong>Google Reviews Are Healthy:</strong> Minimum 20–25 reviews with a rating above 4.2. The survey confirmed the Google listing exists and is easily searchable — now it needs social proof to convert that search traffic.</div>
+    </div>
+    <div class="condition-item">
+      <span class="cond-icon">🔗</span>
+      <div class="cond-text"><strong>Landing Destination Is Ready:</strong> Either www.mymsca.org is functional as a conversion page, or the Google Business listing has complete information including hours, photos, phone (+91 9684808228), and 20+ reviews. Paid traffic without a destination is wasted.</div>
+    </div>
+    <div class="condition-item">
+      <span class="cond-icon">💬</span>
+      <div class="cond-text"><strong>Response Time Is Confirmed:</strong> The walk-in to enquiry conversion is already at 80%. Paid campaigns will increase DM and call volume. If the MSCA Admin cannot respond within 4–6 hours during campaign periods, the boost should wait.</div>
+    </div>
+    <div class="condition-item">
+      <span class="cond-icon">📋</span>
+      <div class="cond-text"><strong>Filming Permissions Are in Place:</strong> The survey confirmed filming permissions are currently assumed rather than documented. Before boosting content featuring identifiable individuals — especially minors — written consent from parents must exist. This is both a legal and reputational protection.</div>
+    </div>
+  </div>
+
+  <h3>What to Boost and at What Budget</h3>
+  <p>Start with one post. The best candidates are Reels that have already earned organic engagement — trainer spotlights using verified brochure credentials, the award winner series, or a beginner's first-climb moment. Target Pimpri-Chinchwad, Pune, ages 12–40, interests in sports, fitness, and youth activities. Budget suggestion: ₹3,000–₹5,000 for a 7-day test on a single Reel. Evaluate cost-per-profile-visit after 7 days. If the number is reasonable for the market, run a second boost. If not, analyse why before spending more.</p>
+
+  <h3>Review Push — Month 3 Priority</h3>
+  <p>By Month 3, a QR code review request should be part of every batch session ending. The survey confirmed that the trial-to-membership conversion happens through instructor interaction — meaning the same instructors who close memberships are the best people to request reviews, because they already have a trust relationship with the user. This is a low-effort, high-return activity that directly supports both search ranking and the client's confidence metric.</p>
+
+  <div class="numbers-grid">
+    <div class="number-card"><span class="number-value">25+</span><div class="number-label">Google Reviews</div><p class="number-note">Cumulative by end of Month 3</p></div>
+    <div class="number-card"><span class="number-value">4.3+</span><div class="number-label">Target Rating</div><p class="number-note">Above this threshold local trust increases</p></div>
+    <div class="number-card"><span class="number-value">80%</span><div class="number-label">Trial Conversion</div><p class="number-note">Already confirmed — protect this number, don't disrupt it</p></div>
+    <div class="number-card"><span class="number-value">2–4K</span><div class="number-label">Reel Impressions</div><p class="number-note">Organic per strong Reel; boosted may reach 10K–30K</p></div>
+  </div>
+
+  <div class="disclaimer">⚠ CRITICAL DISCLAIMER: All numbers are estimates based on typical performance for a local sports facility with consistent organic posting in an Indian metro area. They are not guarantees. The 80% conversion rate is the client's own reported figure — not a number this strategy created or should be held responsible for maintaining.</div>
+</section>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 6: PLATFORM GUIDES
+═══════════════════════════════════════ -->
+<div id="tab-platforms" class="tab-content">
+<section>
+  <div class="section-label">Platform-by-Platform</div>
+  <h2>WHERE TO SHOW UP<br/>AND HOW</h2>
+  <p>The survey confirmed all major platforms are already active. The Instagram handle is <strong>msca_climbingwallpcmc</strong>, Facebook is Maharashtra Sport Climbing Association, the website is www.mymsca.org, and the Google listing exists and is easily searchable. The job now is not to create presence — it is to make existing presence consistent and purposeful.</p>
+
+  <div class="platform-grid">
+    <div class="platform-card">
+      <span class="platform-icon">📸</span>
+      <div class="platform-name">Instagram — msca_climbingwallpcmc</div>
+      <p>Primary discovery engine for youth 14–28. Reels are the highest-reach format. The survey confirmed the content library already includes photos, reels, event coverage, student testimonials, and infrastructure visuals — plus "much more." This is the main organic growth engine.</p>
+      <ul>
+        <li>4x/week: 2 Reels, 1 carousel, 1 Story set</li>
+        <li>Use local hashtags: #PuneSports #PCMCClimbing #SportClimbingIndia #PimpleSaudagar</li>
+        <li>Batch timings in bio — updated whenever they change</li>
+        <li>Contact: +91 9684808228 in bio link or linktree</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <span class="platform-icon">👥</span>
+      <div class="platform-name">Facebook — Maharashtra Sport Climbing Association</div>
+      <p>Parent-facing platform. Ages 30–50, local community groups, event sharing. The survey noted social media is managed by the operator, municipal body, and both — meaning a single content owner must be assigned to prevent posting gaps.</p>
+      <ul>
+        <li>3x/week — cross-post from Instagram, rewrite captions for longer-form</li>
+        <li>Use Facebook Events for every batch opening and competition</li>
+        <li>School partnership content performs well here</li>
+        <li>Join and participate in Pimpri-Chinchwad parent and sports groups</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <span class="platform-icon">🔧</span>
+      <div class="platform-name">Meta Business Suite</div>
+      <p>Management backbone. The survey confirmed ownership clarity on social media accounts is uncertain — Meta Business Suite with a single admin owner solves this. All Instagram and Facebook scheduling, inbox management, and analytics from one place.</p>
+      <ul>
+        <li>Schedule one full week of content every Sunday</li>
+        <li>Unified inbox — reply to all DMs within 24 hours (4–6 hours when boosting)</li>
+        <li>In Month 3, use Ads Manager — not the Boost button — for targeting control</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <span class="platform-icon">▶️</span>
+      <div class="platform-name">YouTube</div>
+      <p>Long-game SEO asset. The survey confirmed YouTube is already active. A video titled "Sport Climbing Classes in Pimpri-Chinchwad | PCMC Complex" with the full address in the description can rank in Google Search for years at zero ongoing cost.</p>
+      <ul>
+        <li>1 video per month minimum — facility tour, event recap, or trainer intro</li>
+        <li>Titles must include: "Pimpri-Chinchwad", "Pimple Saudagar", "Pune"</li>
+        <li>Add address, phone, and website in every video description</li>
+        <li>Link YouTube to Google Business Profile</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <span class="platform-icon">🗺️</span>
+      <div class="platform-name">Google Business Profile</div>
+      <p>The survey confirmed the listing is "easily searchable" — this is an asset already working. A fully maintained Google listing converts intent directly into visits. Post every 7 days (posts expire after 7 days), upload new photos weekly, keep hours accurate, and respond to every Q&A.</p>
+      <ul>
+        <li>Posts every 7 days — batch openings, events, facility updates</li>
+        <li>New photos weekly from sessions and facility</li>
+        <li>Full address: Yoga Park, Pimple Saudagar, Near Vibgyor School, Pune 411027</li>
+        <li>Phone: +91 9684808228 — confirmed and active</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <span class="platform-icon">⭐</span>
+      <div class="platform-name">Google Reviews</div>
+      <p>The survey identified membership growth as the primary client success metric. Google reviews are the single most direct driver of local membership inquiries. The review request must become a standard end-of-session activity, not an occasional campaign.</p>
+      <ul>
+        <li>Month 1: Ask 10–15 existing users personally via QR code at desk</li>
+        <li>Month 2: Ask parents after their child's first month — they write the most detailed reviews</li>
+        <li>Month 3: Every trial session ends with a review request from the trainer</li>
+        <li>Respond to every review — positive and negative — within 48 hours</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <span class="platform-icon">🌐</span>
+      <div class="platform-name">Website — www.mymsca.org</div>
+      <p>The survey marked the website as both "Yes" and "Under construction." Until it functions as a conversion page — with batch details, trainer profiles, contact form, and a visible call to action — the Google Business listing should be the primary link in all bio and campaign content.</p>
+      <ul>
+        <li>Minimum viable website: batch timings, programme descriptions, team page, contact number, Google Maps embed</li>
+        <li>Brochure programme content (Intro/Basic/Advanced/Certificate) is ready to use as page content directly</li>
+        <li>Add team photos and verified credentials from brochure</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 7: CONTENT STRATEGY
+═══════════════════════════════════════ -->
+<div id="tab-content" class="tab-content">
+<section>
+  <div class="section-label">What to Post and When</div>
+  <h2>CONTENT STRATEGY —<br/>SURVEY-INFORMED</h2>
+  <p>Every content decision in this section is grounded directly in the survey data. The client told us what they believe in, what they fear, what they want people to feel, and what must never be claimed. This is the translation of those answers into a repeatable content system.</p>
+
+  <h3>The Non-Negotiable Content Rules (From Survey)</h3>
+  <p>The survey established clear red lines. <strong>Never claim "India's largest," "Olympic-level certified," "International standard," "Best in India," or "Fully operational"</strong> without documented proof. The preferred alternative to "Olympic-standard" is <strong>"World Climbing"</strong> — as the sport is governed by World Climbing, not the IOC directly. "Top Notch, Leading Training Center" was offered as safe superlative language. The dormitory stay must not be mentioned publicly. Free pricing must never be shown publicly. Achievements and awards must be verified before use — the brochure-listed awards are already verified and safe.</p>
+
+  <div class="insight">The client described their one-sentence pitch as: "International Standard, Adventure for & Fitness, full body." And they want visitors to feel "Friendly & Educational." This is the emotional brief for every piece of content: it should feel approachable, educational, and quietly impressive — never intimidating, never boastful.</div>
+
+  <h3>The Four Safe Content Pillars</h3>
+  <p>Every post belongs to one of four pillars. If three consecutive posts fall in the same pillar, stop and shift. <strong style="color:var(--amber)">Show</strong> — facility, sport, equipment, atmosphere — builds desire. <strong style="color:#7ab8e8">Teach</strong> — technique, safety, FAQs, programme explainers — builds credibility. <strong style="color:#8ab880">Prove</strong> — named award winners, verified event history, real testimonials — builds trust. <strong style="color:#f0886a">Connect</strong> — trainer profiles, beginner journeys, behind-the-scenes — builds loyalty.</p>
+
+  <h3>The Content the Survey Gave Us for Free</h3>
+  <p>The survey and brochure together provide a full content bank that requires no creative invention. The old PMC wall at Shivajinagar (established 2001 through Annasahabe Magar, operational from 2010, discontinued due to deteriorated conditions and updated norms) provides a heritage story that anchors the new PCMC wall in 25+ years of climbing culture in Pune. The IFSC Asian Kids Championship, Zonal competitions, National and World Champ events hosted are all verifiable credential content. The four consecutive Shiv Chhatrapati award years are ready-made proof. The 80% trial-to-membership conversion is a real, compelling statistic for parent-facing content. The Olympic debut of sport climbing at Tokyo 2020 and the Mission Olympic 2036 vision give aspirational narrative without making unverifiable claims.</p>
+
+  <div class="content-table">
+    <div class="content-row header">
+      <div>Day</div><div>Instagram</div><div>Facebook</div><div>Other Platform</div>
+    </div>
+    <div class="content-row">
+      <div>Monday</div>
+      <div>Reel: "Start of Week" — technique tip or short climb highlight featuring a named trainer</div>
+      <div>Motivational post with longer caption about youth sport development</div>
+      <div>—</div>
+    </div>
+    <div class="content-row">
+      <div>Wednesday</div>
+      <div>Carousel: Programme explainer (Intro / Basic / Advanced / Certificate) — use brochure content directly</div>
+      <div>Parent-facing post: Safety systems, batch timings, contact number prominently featured</div>
+      <div>Google Business post: Upcoming batch, event, or facility update</div>
+    </div>
+    <div class="content-row">
+      <div>Friday</div>
+      <div>Story series: Poll, Q&A with trainer, or "Did you know" about climbing's Olympic debut</div>
+      <div>Community / school partnership post — School Centric Support package details</div>
+      <div>—</div>
+    </div>
+    <div class="content-row">
+      <div>Saturday</div>
+      <div>Reel: Atmosphere — busy session, group energy, or event recap clip</div>
+      <div>Event or award highlight — Shiv Chhatrapati awardee feature (monthly)</div>
+      <div>YouTube upload (bi-weekly minimum)</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px;">Language That Is Safe vs. Language to Avoid</h3>
+  <p><strong>Safe to use:</strong> "World Climbing sport," "competition-ready facility," "hosted IFSC Asian Kids Championship," "Shiv Chhatrapati Rajya Krida Puraskar awardees," "15m Lead and Speed wall," "5m Bouldering section," "7 Auto-Belays," "certified trainers," "80% trial-to-membership conversion" (attributed to their own data), "free for PCMC students," "friendly and educational environment," "Yoga Park, Pimple Saudagar, Near Vibgyor School."</p>
+  <p><strong>Never use without documented proof:</strong> "India's largest," "Olympic-certified," "Olympic-standard," "Best in India," "International-grade," "Fully operational," "Guaranteed results," any reference to the dormitory facility, any mention of free pricing for the general public.</p>
+</section>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 8: GROUND RULES
+═══════════════════════════════════════ -->
+<div id="tab-rules" class="tab-content">
+<section>
+  <div class="section-label">Non-Negotiables</div>
+  <h2>WHAT THIS<br/>STRATEGY REQUIRES</h2>
+  <p>These are the operational commitments without which the strategy cannot perform as described. They come directly from the gaps identified in the survey — not from general best practices, but from what the data specifically revealed about this client and this facility.</p>
+
+  <div class="rules-box">
+    <h3>Operational Commitments Required</h3>
+    <ul>
+      <li><strong>Single content owner must be named.</strong> The survey showed social media is managed by the operator, the municipal body, and both — with needs for clarification. Shared ownership without a named lead is the most common reason posting consistency collapses by Week 3. One person holds the calendar and the posting access. This week, not next week.</li>
+      <li><strong>DMs and calls answered within 24 hours at minimum, 4–6 hours when campaigns run.</strong> The 80% trial conversion happens through instructor interaction — which means every unanswered enquiry is a lost membership. The campaign can bring people to the door; only the team can get them inside.</li>
+      <li><strong>Written filming and photography permissions must be obtained before any content shoots involving identifiable people.</strong> The survey confirmed these do not currently exist. This applies especially to minors. No Reels featuring children should be published until parental consent forms are signed and filed. This is both a legal requirement and a reputational protection.</li>
+      <li><strong>Google Business hours must be 100% accurate at all times.</strong> A user who arrives when the listing says "Open" but finds the facility closed will write a negative review that can take months to recover from. During exam season (when the survey confirmed attendance drops), hours should be verified and updated proactively.</li>
+      <li><strong>Achievements and awards must be verified before use in any public content.</strong> The survey stated this explicitly. The brochure content — named awardees, named trainers, verified event history — is already cleared. Anything beyond the brochure requires confirmation before publication.</li>
+      <li><strong>A monthly performance report must be shared with the client at the end of each 30-day block.</strong> The client's trust signal is "digi footprint" — they need to see it growing in measurable form. A simple one-page report showing follower growth, Google review count, Google Business views, and post reach will address the 2-month expectation timeline the client stated in the survey.</li>
+      <li><strong>The dormitory stay must not appear in any public content.</strong> This was explicitly stated in the survey handwritten notes. No mention in captions, stories, reels, or website copy until further instruction from the client.</li>
+    </ul>
+  </div>
+
+  <div class="rules-box" style="border-left-color:var(--moss); margin-top:20px;">
+    <h3 style="color:#8ab880;">What This Strategy Will and Will Not Do</h3>
+    <ul>
+      <li>This strategy will build a consistent, credible, content-rich digital presence for PCMC Sport Climbing Complex across Instagram, Facebook, Google, and YouTube over 90 days.</li>
+      <li>This strategy will not produce viral content, guaranteed follower counts, or contractual membership numbers. Social media growth for a local physical sports facility compounds over months, not weeks.</li>
+      <li>This strategy will not replace the in-person experience. The survey confirmed first impressions are excellent ("Lai bhari"). The digital strategy's sole job is to get people through the door — the 80% conversion rate takes care of the rest.</li>
+      <li>This strategy treats the 2-month expectation the client expressed as a deadline for a measurable progress report, not a deadline for viral growth. The report at the end of Month 2 should clearly show the growing digital footprint the client defined as their trust metric.</li>
+      <li>After Month 3, a second-phase strategy should be built using the data collected — potentially including school-outreach digital campaigns, influencer partnerships within the climbing community, and event-specific paid promotions aligned with competition calendar dates.</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<footer>
+  <span>PCMC Sport Climbing Complex · Rohan Networks · Master Strategy File v2</span>
+  <span>Survey signed: Namrata · 10/04/2026 · Confidential</span>
+</footer>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
